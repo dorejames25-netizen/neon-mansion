@@ -1,6 +1,7 @@
 extends Node3D
 ## Authored permanent skeleton; variation is restricted to declared sockets.
 signal room_discovered(room_id: StringName)
+const STYLE = preload("res://assets/neon-mansion/scripts/retrowave_style.gd")
 const A = preload("res://assets/neon-mansion/scripts/architecture.gd")
 const ROOM = preload("res://assets/neon-mansion/scripts/map_room.gd")
 const KIT = preload("res://assets/neon-mansion/scripts/interior_kit.gd")
@@ -110,6 +111,7 @@ func _ready() -> void:
 		node.set_meta("active", false)
 		add_child(node)
 	$Player.global_position = Vector3(0, 0.05, 32)
+	STYLE.apply(self)
 
 static func vector(a: Array) -> Vector3:
 	return Vector3(a[0], a[1], a[2])
@@ -264,7 +266,7 @@ func dress_drawing() -> void:
 	KIT.prop(room,"armchair",Vector3(-2.5,0,5),PI,TEAL,true,1.2)
 	KIT.prop(room,"table_low",Vector3(0,0,2),0,WOOD,true,1.5)
 	KIT.prop(room,"rug_rectangle_B",Vector3(0,0.01,2),0,CHARCOAL,false,2)
-	KIT.prop(room,"lamp_standing",Vector3(5.8,0,5.5),0,BRASS,false,1.2)
+	# Vintage standing lamp omitted from the modern art pass.
 	for side in [-1,1]:
 		for z in [-3.0,3.0]:
 			KIT.panel(room,Vector3(side*7.58,2.5,z),-side*PI/2,3.8,3,WOOD)
@@ -305,3 +307,4 @@ func populate_socket(socket: Dictionary, key: String) -> void:
 		KIT.prop(content,prop.asset,at,prop.yaw,WOOD)
 	KIT.sign(content,t.name.to_upper(),Vector3(0,3.5,6),PI)
 	socket_instances[socket.socket_id] = content
+	STYLE.apply(content)

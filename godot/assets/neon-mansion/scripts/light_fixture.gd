@@ -13,20 +13,21 @@ var light: OmniLight3D
 
 func _ready() -> void:
 	normal_color = Color(0.9, 0.70, 0.45) if warm else Color(0.60, 0.80, 0.86)
+	# Modern suspended bars and flush strips replace candles and vintage sconces.
 	if kind == "chandelier":
-		A.box(self, Vector3(0.08, 2, 0.08), Vector3(0, 1, 0), BRASS)
-		for i in range(8):
-			var angle := i * TAU/8
-			var arm := A.box(self, Vector3(1.8, 0.08, 0.1), Vector3(cos(angle)*0.9, 0, sin(angle)*0.9), BRASS)
-			arm.rotation.y = -angle
-			A.box(self, Vector3(0.10, 0.5, 0.10), Vector3(cos(angle)*1.8, 0.28, sin(angle)*1.8), MAGENTA)
+		for side in [-1,1]:
+			A.box(self,Vector3(3.6,0.12,0.12),Vector3(0,0,side*1.2),CYAN)
+			A.box(self,Vector3(0.12,0.12,2.4),Vector3(side*1.8,0,0),MAGENTA)
+			A.box(self,Vector3(0.035,1.5,0.035),Vector3(side*1.4,0.75,0),METAL)
+	elif kind == "sconce":
+		A.box(self,Vector3(0.16,1.4,0.10),Vector3.ZERO,METAL)
+		A.box(self,Vector3(0.055,1.3,0.025),Vector3(0,0,0.065),MAGENTA if warm else CYAN)
 	else:
-		A.box(self, Vector3(0.32, 0.55, 0.14), Vector3.ZERO, BRASS)
-		A.box(self, Vector3(0.24, 0.36, 0.16), Vector3(0, -0.05, 0.12), METAL)
-		A.box(self, Vector3(0.20, 0.12, 0.10), Vector3(0, -0.10, 0.22), CYAN)
+		A.box(self,Vector3(2.4,0.09,0.16),Vector3.ZERO,METAL)
+		A.box(self,Vector3(2.25,0.025,0.06),Vector3(0,-0.06,0),CYAN)
 	light = OmniLight3D.new()
 	light.light_color = normal_color
-	light.light_energy = energy
+	light.light_energy = 0.0 # Lighting deferred; retain the interaction hook.
 	light.omni_range = range_metres
 	light.position.z = 0.5 if kind == "sconce" else 0
 	light.shadow_enabled = false
